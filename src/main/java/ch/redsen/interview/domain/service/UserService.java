@@ -3,9 +3,17 @@ package ch.redsen.interview.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import ch.redsen.interview.domain.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import ch.redsen.interview.domain.model.User;
+import ch.redsen.interview.domain.repository.EmailRepository;
+
+@Service
 public class UserService {
+    @Autowired
+    private EmailRepository emailRepository;
+
     public Optional<User> getUserById(Long id) {
         throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
     }
