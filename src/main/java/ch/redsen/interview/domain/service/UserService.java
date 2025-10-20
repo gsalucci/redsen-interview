@@ -8,33 +8,36 @@ import org.springframework.stereotype.Service;
 
 import ch.redsen.interview.domain.model.User;
 import ch.redsen.interview.domain.repository.EmailRepository;
+import ch.redsen.interview.domain.repository.UserRepository;
 
 @Service
 public class UserService {
     @Autowired
     private EmailRepository emailRepository;
+    @Autowired
+    private UserRepository userRepository;
 
+    public String getUserEmail(User user) {
+        throw new UnsupportedOperationException("Unimplemented method 'getUserEmail'");
+    }
+    
     public Optional<User> getUserById(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
+        return userRepository.findById(id);
     }
 
     public Optional<User> getUserByUsername(String username) {
-        throw new UnsupportedOperationException("Unimplemented method 'getUserByUsername'");
+        return userRepository.findByUsername(username);
     }
 
     public List<User> getAllUsers() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
+        return userRepository.findAll();
     }
 
     public User createUser(User user) {
-        throw new UnsupportedOperationException("Unimplemented method 'createUser'");
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
-    }
-
-    public String getUserEmailFromEmailRepository(User user) {
-        throw new UnsupportedOperationException("Unimplemented method 'getUserEmail'");
+        userRepository.deleteById(id);
     }
 }

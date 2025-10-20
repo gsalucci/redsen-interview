@@ -15,22 +15,22 @@ public class TodoService {
     @Autowired
     TodoRepository todoRepository;
     
-    public Optional<Todo> getTodoById(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getTodoById'");
-    }
-    public List<Todo> getTodosByUser(Long userId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getTodosByUser'");
-    }
-    public List<Todo> getAllTodos() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllTodos'");
-    }
-    public Todo createTodo(Todo todo) {
-        throw new UnsupportedOperationException("Unimplemented method 'createTodo'");
-    }
-    public void deleteTodo(Long id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteTodo'");
-    }
     public Map<Long, List<Todo>> getTodosGroupedByUser() {
         throw new UnsupportedOperationException("Unimplemented method 'getTodosGroupedByUser'");
+    }
+    public Optional<Todo> getTodoById(Long id) {
+        return todoRepository.findById(id);
+    }
+    public List<Todo> getTodosByUser(Long userId) {
+        return todoRepository.findByUserId(userId);
+    }
+    public List<Todo> getAllTodos() {
+        return todoRepository.findAll();
+    }
+    public Todo createTodo(Todo todo) {
+        return todoRepository.save(todo);
+    }
+    public void deleteTodo(Long id) {
+        todoRepository.deleteById(id);
     }
 }
