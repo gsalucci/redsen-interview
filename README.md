@@ -9,7 +9,6 @@ A small Spring Boot REST application used for a technical interview exercise. It
   - spring-boot-starter
   - spring-boot-starter-web (REST controllers)
 - Jakarta Validation API
-- Lombok (optional; for convenience)
 - JUnit + Mockito (tests)
 - Maven (wrapper included)
 
