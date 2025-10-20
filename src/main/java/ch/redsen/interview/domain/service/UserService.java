@@ -34,7 +34,7 @@ public class UserService {
         throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
     }
 
-    public String getUserEmail(User user) {
+    public String getUserEmailFromEmailRepository(User user) {
         throw new UnsupportedOperationException("Unimplemented method 'getUserEmail'");
     }
 }

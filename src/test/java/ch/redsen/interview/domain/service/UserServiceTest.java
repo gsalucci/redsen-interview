@@ -82,7 +82,7 @@ public class UserServiceTest {
 
     @Test
     void testGetUserEmail() {
-        String email = userService.getUserEmail(user1);
+        String email = userService.getUserEmailFromEmailRepository(user1);
         verify(emailRepository).getUserEmail(1L);
     }
 }
