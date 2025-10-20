@@ -1,21 +1,17 @@
 package ch.redsen.interview.domain.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -28,81 +24,88 @@ import ch.redsen.interview.domain.repository.TodoRepository;
 class TodoServiceTest {
     @Mock
     private TodoRepository todoRepository;
+
     @InjectMocks
     private TodoService todoService;
 
-    private final Todo todo1 = new Todo(1L, "Task 1", "desc1", TodoStatus.PENDING, LocalDateTime.now().plusDays(1), 1L);
-    private final Todo todo2 = new Todo(2L, "Task 2", "desc2", TodoStatus.IN_PROGRESS, LocalDateTime.now().plusDays(2),
-            1L);
-    private final Todo todo3 = new Todo(3L, "Task 3", "desc3", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(3),
-            2L);
-    private final Todo todo4 = new Todo(4L, "Task 4", "desc4", TodoStatus.PENDING, LocalDateTime.now().plusDays(4), 2L);
-    private final List<Todo> allTodos = List.of(todo1, todo2, todo3, todo4);
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        // Mock repository methods
-        Mockito.when(todoRepository.findAll()).thenReturn(allTodos);
-        Mockito.when(todoRepository.findById(1L)).thenReturn(Optional.of(todo1));
-        Mockito.when(todoRepository.findById(2L)).thenReturn(Optional.of(todo2));
-        Mockito.when(todoRepository.findById(3L)).thenReturn(Optional.of(todo3));
-        Mockito.when(todoRepository.findById(4L)).thenReturn(Optional.of(todo4));
-        Mockito.when(todoRepository.findById(Mockito.longThat(id -> id < 1 || id > 4))).thenReturn(Optional.empty());
-        Mockito.when(todoRepository.findByUserId(1L)).thenReturn(List.of(todo1, todo2));
-        Mockito.when(todoRepository.findByUserId(2L)).thenReturn(List.of(todo3, todo4));
-        Mockito.when(todoRepository.findByUserId(Mockito.longThat(id -> id < 1 || id > 2))).thenReturn(List.of());
-        Mockito.when(todoRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+    @Test
+    void shouldGetTodosGroupedByUser() {
+        // Given
+        when(todoRepository.findAll())
+            .thenReturn(
+                List.of(
+                    new Todo(1L, "Title 1", "Description 1", TodoStatus.PENDING, LocalDateTime.now().plusDays(1), 1L),
+                    new Todo(2L, "Title 2", "Description 2", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(2), 1L),
+                    new Todo(3L, "Title 3", "Description 3", TodoStatus.PENDING, LocalDateTime.now().plusDays(3), 1L),
+                    new Todo(4L, "Title 4", "Description 4", TodoStatus.PENDING, LocalDateTime.now().plusDays(4), 2L),
+                    new Todo(5L, "Title 5", "Description 5", TodoStatus.PENDING, LocalDateTime.now().plusDays(4), 2L),
+                    new Todo(6L, "Title 6", "Description 6", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(5), 3L)
+                ));
+        // When
+        Map<Long, List<Todo>> result = todoService.getTodosGroupedByUser();
+        // Then
+        verify(todoRepository).findAll();
+        assertThat(result).hasSize(3);
+        assertThat(result).containsKey(1L);
+        assertThat(result).containsKey(2L);
+        assertThat(result).containsKey(3L);
+        assertThat(result.get(1L)).hasSize(3);
+        assertThat(result.get(2L)).hasSize(2);
+        assertThat(result.get(3L)).hasSize(1);
     }
 
     @Test
-    void testGetAllTodos() {
-        List<Todo> todos = todoService.getAllTodos();
-        assertEquals(4, todos.size());
-        assertTrue(todos.contains(todo1));
-        assertTrue(todos.contains(todo4));
+    void shouldGetAllUserIdsWithPendingTodos() {
+        // Given
+        when(todoRepository.findAll())
+            .thenReturn(
+                List.of(
+                    new Todo(1L, "Title 1", "Description 1", TodoStatus.PENDING, LocalDateTime.now().plusDays(1), 1L),
+                    new Todo(2L, "Title 2", "Description 2", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(2), 1L),
+                    new Todo(3L, "Title 3", "Description 3", TodoStatus.PENDING, LocalDateTime.now().plusDays(3), 1L),
+                    new Todo(4L, "Title 4", "Description 4", TodoStatus.PENDING, LocalDateTime.now().plusDays(4), 2L),
+                    new Todo(5L, "Title 5", "Description 5", TodoStatus.PENDING, LocalDateTime.now().plusDays(4), 2L),
+                    new Todo(6L, "Title 6", "Description 6", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(5), 3L)
+                ));
+        // When
+        List<Long> result = todoService.getAllUserIdsWithPendingTodos();
+        // Then
+        verify(todoRepository).findAll();
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactlyInAnyOrder(1L, 2L);
     }
 
     @Test
-    void testGetTodoById() {
-        assertEquals(todo1, todoService.getTodoById(1L).orElse(null));
-        assertEquals(todo4, todoService.getTodoById(4L).orElse(null));
-        assertTrue(todoService.getTodoById(99L).isEmpty());
+    void shouldCheckIfUserHasPendingTodos() {
+        // Given
+        Long userId = 1L;
+        when(todoRepository.findAll())
+            .thenReturn(
+                List.of(
+                    new Todo(1L, "Title 1", "Description 1", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(1), userId),
+                    new Todo(2L, "Title 2", "Description 2", TodoStatus.PENDING, LocalDateTime.now().plusDays(2), userId)
+                ));
+        // When
+        boolean result = todoService.hasPendingTodos(userId);
+        // Then
+        verify(todoRepository).findAll();
+        assertThat(result).isTrue();
     }
 
     @Test
-    void testGetTodosByUser() {
-        List<Todo> user1Todos = todoService.getTodosByUser(1L);
-        assertEquals(2, user1Todos.size());
-        assertTrue(user1Todos.contains(todo1));
-        assertTrue(user1Todos.contains(todo2));
-        List<Todo> user2Todos = todoService.getTodosByUser(2L);
-        assertEquals(2, user2Todos.size());
-        assertTrue(user2Todos.contains(todo3));
-        assertTrue(user2Todos.contains(todo4));
-        assertTrue(todoService.getTodosByUser(99L).isEmpty());
-    }
-
-    @Test
-    void testCreateTodo() {
-        Todo newTodo = new Todo(null, "New Task", "desc", TodoStatus.PENDING, LocalDateTime.now(), 1L);
-        Todo saved = todoService.createTodo(newTodo);
-        assertEquals(newTodo, saved);
-    }
-
-    @Test
-    void testDeleteTodo() {
-        // Just ensure no exception is thrown
-        assertDoesNotThrow(() -> todoService.deleteTodo(1L));
-    }
-
-    @Test
-    void testGetTodosGroupedByUser() {
-        Map<Long, List<Todo>> grouped = todoService.getTodosGroupedByUser();
-        assertEquals(2, grouped.size());
-        assertEquals(2, grouped.get(1L).size());
-        assertEquals(2, grouped.get(2L).size());
-        assertTrue(grouped.get(1L).contains(todo1));
-        assertTrue(grouped.get(2L).contains(todo3));
+    void shouldCheckIfUserHasCompletedAllTodos() {
+        // Given
+        Long userId = 1L;
+        when(todoRepository.findAll())
+            .thenReturn(
+                List.of(
+                    new Todo(1L, "Title 1", "Description 1", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(1), userId),
+                    new Todo(2L, "Title 2", "Description 2", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(2), userId)
+                ));
+        // When
+        boolean result = todoService.hasCompletedAllTodos(userId);
+        // Then
+        verify(todoRepository).findAll();
+        assertThat(result).isTrue();
     }
 }

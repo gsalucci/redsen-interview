@@ -14,22 +14,39 @@ import ch.redsen.interview.domain.repository.TodoRepository;
 public class TodoService {
     @Autowired
     TodoRepository todoRepository;
-    
+
     public Map<Long, List<Todo>> getTodosGroupedByUser() {
         throw new UnsupportedOperationException("Unimplemented method 'getTodosGroupedByUser'");
     }
+
+    public List<Long> getAllUserIdsWithPendingTodos() {
+        throw new UnsupportedOperationException("Unimplemented method 'getAllUserIdsWithPendingTodos'");
+    }
+
+    public boolean hasPendingTodos(Long userId) {
+        throw new UnsupportedOperationException("Unimplemented method 'hasPendingTodos'");
+    }
+
+    public boolean hasCompletedAllTodos(Long userId) {
+        throw new UnsupportedOperationException("Unimplemented method 'hasCompletedAllTodos'");
+    }
+
     public Optional<Todo> getTodoById(Long id) {
         return todoRepository.findById(id);
     }
+
     public List<Todo> getTodosByUser(Long userId) {
         return todoRepository.findByUserId(userId);
     }
+
     public List<Todo> getAllTodos() {
         return todoRepository.findAll();
     }
+
     public Todo createTodo(Todo todo) {
         return todoRepository.save(todo);
     }
+
     public void deleteTodo(Long id) {
         todoRepository.deleteById(id);
     }
