@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ch.redsen.interview.domain.model.User;
@@ -17,10 +18,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${fallback.user-email}")
+    private String fallbackUserEmail;
+
     public String getUserEmail(User user) {
         throw new UnsupportedOperationException("Unimplemented method 'getUserEmail'");
     }
-    
+
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }

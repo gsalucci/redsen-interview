@@ -79,7 +79,7 @@ class TodoServiceTest {
     void shouldCheckIfUserHasPendingTodos() {
         // Given
         Long userId = 1L;
-        when(todoRepository.findAll())
+        when(todoRepository.findByUserId(userId))
             .thenReturn(
                 List.of(
                     new Todo(1L, "Title 1", "Description 1", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(1), userId),
@@ -88,7 +88,7 @@ class TodoServiceTest {
         // When
         boolean result = todoService.hasPendingTodos(userId);
         // Then
-        verify(todoRepository).findAll();
+        verify(todoRepository).findByUserId(userId);
         assertThat(result).isTrue();
     }
 
@@ -96,7 +96,7 @@ class TodoServiceTest {
     void shouldCheckIfUserHasCompletedAllTodos() {
         // Given
         Long userId = 1L;
-        when(todoRepository.findAll())
+        when(todoRepository.findByUserId(userId))
             .thenReturn(
                 List.of(
                     new Todo(1L, "Title 1", "Description 1", TodoStatus.COMPLETED, LocalDateTime.now().plusDays(1), userId),
@@ -105,7 +105,7 @@ class TodoServiceTest {
         // When
         boolean result = todoService.hasCompletedAllTodos(userId);
         // Then
-        verify(todoRepository).findAll();
+        verify(todoRepository).findByUserId(userId);
         assertThat(result).isTrue();
     }
 }
