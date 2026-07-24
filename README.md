@@ -63,7 +63,14 @@ The app will start on the configured port (see `src/main/resources/application.p
 .\mvnw.cmd -q -Dtest="*ServiceTest" test
 ```
 
-## Notes
+## Local-only files
+
+The following files are kept untracked via `git update-index --skip-worktree`. Local edits to these files will not appear in `git status` and `git pull`/`git merge` will not overwrite them:
+
+- `src/main/java/ch/redsen/interview/domain/service/UserService.java`
+- `src/main/java/ch/redsen/interview/domain/service/TodoService.java`
+
+To re-enable tracking: `git update-index --no-skip-worktree src/main/java/ch/redsen/interview/domain/service/UserService.java src/main/java/ch/redsen/interview/domain/service/TodoService.java`
 
 - There is no external database by default; data is lost on application restart.
 
