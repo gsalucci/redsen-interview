@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/ch/redsen/interview/domain/service/UserService.java
+src/main/java/ch/redsen/interview/domain/service/TodoService.java
