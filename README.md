@@ -1,15 +1,15 @@
 # Redsen Interview Project
 
-A small Spring Boot REST application used for a technical interview exercise. It models simple User and Todo management with in-memory persistence and unit tests that define the expected behavior.
+A small Quarkus REST application used for a technical interview exercise. It models simple User and Todo management with in-memory persistence and unit tests that define the expected behavior.
 
 ## Tech stack
 
 - Java 21
-- Spring Boot 3.5.6
-  - spring-boot-starter
-  - spring-boot-starter-web (REST controllers)
+- Quarkus 3.40.1
+  - quarkus-arc (CDI dependency injection)
+  - quarkus-rest + quarkus-rest-jackson (REST controllers, JSON)
 - Jakarta Validation API
-- JUnit + Mockito (tests)
+- JUnit 5 + Mockito (tests, via quarkus-junit5 and quarkus-junit5-mockito)
 - Maven (wrapper included)
 
 See `pom.xml` for exact versions and dependencies.
@@ -36,7 +36,7 @@ HTTP request -> Controller (`rest/controller`) -> Service (`domain/service`) -> 
 
 ## Running locally
 
-From a PowerShell terminal on Windows, you can use the Maven Wrapper included in the repo:
+From a PowerShell terminal on Windows, you can use the Maven Wrapper included in the repo (on macOS/Linux, use `./mvnw` instead of `.\mvnw.cmd`):
 
 ```powershell
 # Run unit tests
@@ -45,11 +45,14 @@ From a PowerShell terminal on Windows, you can use the Maven Wrapper included in
 # Build the application (runs tests by default)
 .\mvnw.cmd -q clean package
 
-# Start the application
-.\mvnw.cmd -q spring-boot:run
+# Start the application in dev mode (live reload)
+.\mvnw.cmd quarkus:dev
+
+# Or run the packaged application
+java -jar target\quarkus-app\quarkus-run.jar
 ```
 
-The app will start on the configured port (see `src/main/resources/application.properties`).
+The app listens on port 8080 by default (`quarkus.http.port`, see `src/main/resources/application.properties`). Tests annotated with `@QuarkusTest` start the application on a random port.
 
 ## Running and iterating on tests
 

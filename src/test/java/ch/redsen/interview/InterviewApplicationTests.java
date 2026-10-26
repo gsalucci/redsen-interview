@@ -1,9 +1,9 @@
 package ch.redsen.interview;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import io.quarkus.test.junit.QuarkusTest;
 
-@SpringBootTest
+@QuarkusTest
 class InterviewApplicationTests {
 
 	@Test

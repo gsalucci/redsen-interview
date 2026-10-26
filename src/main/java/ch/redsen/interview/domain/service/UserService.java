@@ -3,22 +3,23 @@ package ch.redsen.interview.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import ch.redsen.interview.domain.model.User;
 import ch.redsen.interview.domain.repository.EmailRepository;
 import ch.redsen.interview.domain.repository.UserRepository;
 
-@Service
+@ApplicationScoped
 public class UserService {
-    @Autowired
+    @Inject
     private EmailRepository emailRepository;
-    @Autowired
+    @Inject
     private UserRepository userRepository;
 
-    @Value("${fallback.user-email}")
+    @ConfigProperty(name = "fallback.user-email")
     private String fallbackUserEmail;
 
     public String getUserEmail(Long userId) {

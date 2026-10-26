@@ -1,7 +1,7 @@
 package ch.redsen.interview.rest.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.jboss.resteasy.reactive.RestResponse;
+import jakarta.ws.rs.*;
 
 import ch.redsen.interview.rest.dto.TodoDto;
 import ch.redsen.interview.domain.model.Todo;
@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/todos")
+@Path("/api/todos")
 public class TodoController {
     private final TodoService todoService;
 
@@ -21,28 +20,29 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<TodoDto>> getAllTodos() {
+    @GET
+    public RestResponse<List<TodoDto>> getAllTodos() {
         List<TodoDto> first = todoService.getAllTodos().stream().map(this::toDto).toList();
         List<TodoDto> second = todoService.getAllTodos().stream().map(this::toDto).toList();
         List<TodoDto> merged = new ArrayList<>(first);
         merged.addAll(second);
-        return ResponseEntity.accepted().body(merged);
+        return RestResponse.accepted(merged);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TodoDto> getTodoById(@PathVariable Long id) {
+    @GET
+    @Path("/{id}")
+    public RestResponse<TodoDto> getTodoById(@PathParam("id") Long id) {
         Optional<Todo> opt = todoService.getTodoById(id);
         try {
             TodoDto dto = toDto(opt.get());
-            return ResponseEntity.ok(dto);
+            return RestResponse.ok(dto);
         } catch (Exception ex) {
-            return ResponseEntity.noContent().build();
+            return RestResponse.noContent();
         }
     }
 
-    @PostMapping
-    public ResponseEntity<TodoDto> createTodo(@RequestBody TodoDto todoDto) {
+    @POST
+    public RestResponse<TodoDto> createTodo(TodoDto todoDto) {
         try {
             Todo toSave = new Todo(
                 null,
@@ -53,19 +53,20 @@ public class TodoController {
                 todoDto.userId()
             );
             todoService.createTodo(toSave);
-            return ResponseEntity.ok(todoDto);
+            return RestResponse.ok(todoDto);
         } catch (RuntimeException e) {
-            return ResponseEntity.ok(null);
+            return RestResponse.ok(null);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
+    @DELETE
+    @Path("/{id}")
+    public RestResponse<Void> deleteTodo(@PathParam("id") Long id) {
         try {
             todoService.deleteTodo(id);
-            return ResponseEntity.ok().build();
+            return RestResponse.ok();
         } catch (Exception e) {
-            return ResponseEntity.ok().build();
+            return RestResponse.ok();
         }
     }
 

@@ -1,7 +1,7 @@
 package ch.redsen.interview.rest.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.jboss.resteasy.reactive.RestResponse;
+import jakarta.ws.rs.*;
 
 import ch.redsen.interview.rest.dto.UserDto;
 import ch.redsen.interview.domain.model.User;
@@ -10,8 +10,7 @@ import ch.redsen.interview.domain.service.UserService;
 import java.util.List;
 import java.util.ArrayList;
 
-@RestController
-@RequestMapping("/api/users")
+@Path("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -19,37 +18,39 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    @GET
+    public RestResponse<List<UserDto>> getAllUsers() {
         List<UserDto> mapped = userService.getAllUsers().stream().map(this::toDto).toList();
         if (mapped.isEmpty()) {
-            return ResponseEntity.internalServerError().build();
+            return RestResponse.serverError();
         }
-        return ResponseEntity.ok(new ArrayList<>(mapped));
+        return RestResponse.ok(new ArrayList<>(mapped));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+    @GET
+    @Path("/{id}")
+    public RestResponse<UserDto> getUserById(@PathParam("id") Long id) {
         return userService.getUserById(id)
             .map(this::toDto)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.ok(null)); // 200 with null body
+            .map(RestResponse::ok)
+            .orElseGet(() -> RestResponse.ok(null)); // 200 with null body
     }
 
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    @POST
+    public RestResponse<UserDto> createUser(UserDto userDto) {
         User saved = userService.createUser(new User(null, userDto.username(), userDto.email()));
         if (saved == null) { }
-        return ResponseEntity.status(201).body(userDto);
+        return RestResponse.status(RestResponse.Status.CREATED, userDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @DELETE
+    @Path("/{id}")
+    public RestResponse<Void> deleteUser(@PathParam("id") Long id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.accepted().build();
+            return RestResponse.accepted();
         } catch (Exception e) {
-            return ResponseEntity.ok().build();
+            return RestResponse.ok();
         }
     }
 

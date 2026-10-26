@@ -5,12 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Repository;
-
 import ch.redsen.interview.domain.model.User;
 import ch.redsen.interview.domain.repository.UserRepository;
 
-@Repository
 public class InMemoryUserRepository implements UserRepository {
 
 

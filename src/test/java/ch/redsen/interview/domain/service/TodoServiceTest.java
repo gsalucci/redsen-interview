@@ -13,13 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
+import io.quarkus.test.junit.QuarkusTest;
 
 import ch.redsen.interview.domain.model.Todo;
 import ch.redsen.interview.domain.model.TodoStatus;
 import ch.redsen.interview.domain.repository.TodoRepository;
 
-@SpringBootTest
+@QuarkusTest
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTest {
     @Mock

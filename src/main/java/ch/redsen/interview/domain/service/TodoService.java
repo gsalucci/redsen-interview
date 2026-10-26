@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import ch.redsen.interview.domain.model.Todo;
 import ch.redsen.interview.domain.repository.TodoRepository;
 
-@Service
+@ApplicationScoped
 public class TodoService {
-    @Autowired
+    @Inject
     TodoRepository todoRepository;
 
     public Map<Long, List<Todo>> getTodosGroupedByUser() {

@@ -5,30 +5,39 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.QuarkusTestProfile;
+import io.quarkus.test.junit.TestProfile;
+import jakarta.inject.Inject;
 
 import ch.redsen.interview.domain.model.User;
 import ch.redsen.interview.domain.repository.EmailRepository;
 import ch.redsen.interview.domain.repository.UserRepository;
 
-@SpringBootTest
-@TestPropertySource(properties = "fallback.user-email=unknown@example.com")
+@QuarkusTest
+@TestProfile(UserServiceTest.FallbackEmailProfile.class)
 public class UserServiceTest {
 
-    @Autowired
+    public static class FallbackEmailProfile implements QuarkusTestProfile {
+        @Override
+        public Map<String, String> getConfigOverrides() {
+            return Map.of("fallback.user-email", "unknown@example.com");
+        }
+    }
+
+    @Inject
     private UserService userService;
 
-    @MockitoBean
+    @InjectMock
     private EmailRepository emailRepository;
 
-    @MockitoBean
+    @InjectMock
     private UserRepository userRepository;
 
     @ParameterizedTest

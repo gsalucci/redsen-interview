@@ -7,13 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Repository;
-
 import ch.redsen.interview.domain.model.Todo;
 import ch.redsen.interview.domain.model.TodoStatus;
 import ch.redsen.interview.domain.repository.TodoRepository;
 
-@Repository
 public class InMemoryTodoRepository implements TodoRepository {
 
 

@@ -4,17 +4,19 @@ import ch.redsen.interview.domain.repository.TodoRepository;
 import ch.redsen.interview.domain.repository.UserRepository;
 import ch.redsen.interview.persistence.InMemoryTodoRepository;
 import ch.redsen.interview.persistence.InMemoryUserRepository;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
-@Configuration
+@ApplicationScoped
 public class RepositoryConfig {
-    @Bean
+    @Produces
+    @ApplicationScoped
     public TodoRepository todoRepository() {
         return new InMemoryTodoRepository();
     }
 
-    @Bean
+    @Produces
+    @ApplicationScoped
     public UserRepository userRepository() {
         return new InMemoryUserRepository();
     }
