@@ -10,11 +10,11 @@ protected = ["forge.toml", ".devcontainer/devcontainer.json"]
 [judge]
 # The acceptance command forge runs at the end of a turn. Left out, the
 # active packs choose it (for Maven: mvn -B verify from the repository root).
-command = "mvn -B test-compile"
+command = "mvn -B test -Dtest='!*ServiceTest' -Dsurefire.failIfNoSpecifiedTests=false"
 # The most holds per tree, the latch's own hold counted among them.
 holds = 3
 
 [packs]
 # Found when this file was written.
-enable = ["java", "spring-boot"]
+enable = ["java", "quarkus"]
 disable = []
