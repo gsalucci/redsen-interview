@@ -1,0 +1,20 @@
+# forge's settings for this repository. forge is switched on in any folder
+# holding this file; commit it. It is yours: the model changes it only at
+# your request, and only forge.toml and the container setup are protected.
+
+[forge]
+# Paths that belong to you: a change by the model is refused, and a change
+# made any other way is put back.
+protected = ["forge.toml", ".devcontainer/devcontainer.json"]
+
+[judge]
+# The acceptance command forge runs at the end of a turn. Left out, the
+# active packs choose it (for Maven: mvn -B verify from the repository root).
+# command = "mvn -B verify"
+# The most holds per tree, the latch's own hold counted among them.
+holds = 3
+
+[packs]
+# Found when this file was written.
+enable = ["java", "spring-boot"]
+disable = []
