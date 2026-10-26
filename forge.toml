@@ -5,7 +5,7 @@
 [forge]
 # Paths that belong to you: a change by the model is refused, and a change
 # made any other way is put back.
-protected = ["forge.toml", ".devcontainer/devcontainer.json"]
+protected = ["forge.toml"]
 
 [judge]
 # The acceptance command forge runs at the end of a turn. Left out, the
