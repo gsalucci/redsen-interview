@@ -1,0 +1,27 @@
+{
+  "name": "redsen-interview (Java 21 / Quarkus)",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "none",
+      "installMaven": "true",
+      "installGradle": "false"
+    }
+  },
+  "mounts": [
+    "source=redsen-interview-m2,target=/home/vscode/.m2,type=volume"
+  ],
+  "forwardPorts": [8080, 5005],
+  "portsAttributes": {
+    "8080": { "label": "Quarkus HTTP", "onAutoForward": "notify" },
+    "5005": { "label": "Quarkus debug", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.m2 && ./mvnw -B -q dependency:go-offline",
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack", "redhat.vscode-quarkus"]
+    },
+    "jetbrains": { "backend": "IntelliJ" }
+  },
+  "remoteUser": "vscode"
+}
