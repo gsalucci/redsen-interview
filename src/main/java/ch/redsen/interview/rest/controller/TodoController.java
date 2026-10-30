@@ -1,5 +1,6 @@
 package ch.redsen.interview.rest.controller;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.resteasy.reactive.RestResponse;
 import jakarta.ws.rs.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
+@ApplicationScoped
 @Path("/api/todos")
 public class TodoController {
     private final TodoService todoService;

@@ -1,5 +1,6 @@
 package ch.redsen.interview.rest.controller;
 
+import jakarta.inject.Singleton;
 import org.jboss.resteasy.reactive.RestResponse;
 import jakarta.ws.rs.*;
 
@@ -10,6 +11,7 @@ import ch.redsen.interview.domain.service.UserService;
 import java.util.List;
 import java.util.ArrayList;
 
+@Singleton
 @Path("/api/users")
 public class UserController {
     private final UserService userService;
