@@ -1,13 +1,13 @@
 package ch.redsen.interview.rest.controller;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.resteasy.reactive.RestResponse;
 import jakarta.ws.rs.*;
 
 import ch.redsen.interview.rest.dto.TodoDto;
 import ch.redsen.interview.domain.model.Todo;
 import ch.redsen.interview.domain.model.TodoStatus;
 import ch.redsen.interview.domain.service.TodoService;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -23,28 +23,28 @@ public class TodoController {
     }
 
     @GET
-    public RestResponse<List<TodoDto>> getAllTodos() {
+    public Response getAllTodos() {
         List<TodoDto> first = todoService.getAllTodos().stream().map(this::toDto).toList();
         List<TodoDto> second = todoService.getAllTodos().stream().map(this::toDto).toList();
         List<TodoDto> merged = new ArrayList<>(first);
         merged.addAll(second);
-        return RestResponse.accepted(merged);
+        return Response.accepted(merged).build();
     }
 
     @GET
     @Path("/{id}")
-    public RestResponse<TodoDto> getTodoById(@PathParam("id") Long id) {
+    public Response getTodoById(@PathParam("id") Long id) {
         Optional<Todo> opt = todoService.getTodoById(id);
         try {
             TodoDto dto = toDto(opt.get());
-            return RestResponse.ok(dto);
+            return Response.ok(dto).build();
         } catch (Exception ex) {
-            return RestResponse.noContent();
+            return Response.noContent().build();
         }
     }
 
     @POST
-    public RestResponse<TodoDto> createTodo(TodoDto todoDto) {
+    public Response createTodo(TodoDto todoDto) {
         try {
             Todo toSave = new Todo(
                 null,
@@ -55,20 +55,20 @@ public class TodoController {
                 todoDto.userId()
             );
             todoService.createTodo(toSave);
-            return RestResponse.ok(todoDto);
+            return Response.ok(todoDto).build();
         } catch (RuntimeException e) {
-            return RestResponse.ok(null);
+            return Response.ok(null).build();
         }
     }
 
     @DELETE
     @Path("/{id}")
-    public RestResponse<Void> deleteTodo(@PathParam("id") Long id) {
+    public Response deleteTodo(@PathParam("id") Long id) {
         try {
             todoService.deleteTodo(id);
-            return RestResponse.ok();
+            return Response.ok().build();
         } catch (Exception e) {
-            return RestResponse.ok();
+            return Response.ok().build();
         }
     }
 
